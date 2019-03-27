@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
+import pages.loginPage;
 import suporte.web;
 
 public class informacoesUsuarioPageObjects {
@@ -21,7 +22,11 @@ public class informacoesUsuarioPageObjects {
 
 	@Test
 	public void testAdicionarUmaInformacaoAdicionalDoUsuario(){
-
+		//utilizando as pages criadas anteriormente
+		new loginPage(driver)
+					.clickSignIn()
+					.typeLogin("julio0001");
+					
 	}
 
 	@After	
