@@ -4,9 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeUnit;
 
+import org.easetech.easytest.annotation.DataLoader;
+import org.easetech.easytest.annotation.Param;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,10 +17,21 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.easetech.easytest.runner.DataDrivenTestRunner;
+
+import suporte.web;
+
+
+
+//usando o easytest
+@RunWith(DataDrivenTestRunner.class)
+@DataLoader(filePaths = "dados.csv")
+
+
 
 public class InformacoesUsuarioTest {
 	
-	//Todo mundo pode usar este método
+	//Todo mundo pode usar este muted
 	private WebDriver driver;
 	
 	
@@ -25,13 +39,7 @@ public class InformacoesUsuarioTest {
 	@Before
 	public void setup()
 	{
-
-	  	System.setProperty("webdriver.chrome.driver", "C:/eclipse/Selenium/chromedriver.exe");
-	  	driver = new ChromeDriver();	  	
-	  	driver.manage().window().maximize();
-	  	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-	  	
-	  	driver.get("http://www.juliodelima.com.br/taskit/");
+		driver = web.createChrome();
 	  	
 	  	driver.findElement(By.linkText("Sign in")).click();
 	  	
@@ -45,7 +53,7 @@ public class InformacoesUsuarioTest {
 	}
 
 	@Test
-	public void testAdicionarUmaInformacaoAdicionalDoUsuario()	{	
+	public void testAdicionarUmaInformacaoAdicionalDoUsuario (@Param(name="tipo")String tipo, @Param (name="contato")String contato, @Param(name="mensagemesperada")String mensagemesperada)	{	
 
 		WebElement me = driver.findElement(By.className("me"));
 		String textoNoElementoMe = me.getText();
@@ -59,19 +67,19 @@ public class InformacoesUsuarioTest {
 		
 		WebElement popupaddMoreData = driver.findElement(By.id("addmoredata"));
 		WebElement campoType = popupaddMoreData.findElement(By.name("type"));
-		new Select(campoType).selectByVisibleText("Phone");
+		new Select(campoType).selectByVisibleText(tipo);
 		
-		popupaddMoreData.findElement(By.name("contact")).sendKeys("+551199996666");
+		popupaddMoreData.findElement(By.name("contact")).sendKeys(contato);
 		popupaddMoreData.findElement(By.linkText("SAVE")).click();
 		
 		WebElement msgsucesso = driver.findElement(By.id("toast-container"));
 		String textoSucesso = msgsucesso.getText();
 		System.out.println("\n O texto que esta no elemento é " + textoSucesso);
-		assertEquals( "Your contact has been added!", textoSucesso);
+		assertEquals( mensagemesperada, textoSucesso);
 
 	}
 	
-	@Test
+	//@Test
 	
 	public void removerAddData() {
 
